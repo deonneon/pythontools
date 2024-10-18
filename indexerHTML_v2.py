@@ -63,14 +63,37 @@ def generate_index(root_dir):
             """
         </ul>
     </div>
-    <iframe id="file-viewer" name="file-viewer" src="" title="File Viewer"></iframe>
+    <iframe id="file-viewer" name="file-viewer" src="" title="File Viewer" onload="fixImagePaths()"></iframe>
+
+    <script>
+        // Function to dynamically adjust image paths
+        function fixImagePaths() {
+            const iframe = document.getElementById('file-viewer');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            
+            // Get the current iframe's src (path to the HTML file)
+            const srcPath = iframe.src;
+            const basePath = srcPath.substring(0, srcPath.lastIndexOf('/')) + '/';
+            
+            // Find all img elements in the iframe document
+            const images = iframeDoc.querySelectorAll('img');
+            
+            // Adjust the src of each image to be relative to the HTML file's directory
+            images.forEach(img => {
+                const imgSrc = img.getAttribute('src');
+                if (!imgSrc.startsWith('http') && !imgSrc.startsWith(basePath)) {
+                    img.src = basePath + imgSrc;
+                }
+            });
+        }
+    </script>
 </body>
 </html>
 """
         )
 
     print(
-        "Formatted index file with breaks before parent folders generated successfully."
+        "Formatted index file with dynamic image path correction generated successfully."
     )
 
 
