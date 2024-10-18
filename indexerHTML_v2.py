@@ -66,29 +66,37 @@ def generate_index(root_dir):
     <iframe id="file-viewer" name="file-viewer" src="" title="File Viewer"></iframe>
 
     <script>
-        // Function to dynamically adjust image paths
-        function fixImagePaths() {
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
             const iframe = document.getElementById('file-viewer');
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
             
-            // Get the current iframe's src (path to the HTML file)
-            const srcPath = iframe.src;
-            const basePath = srcPath.substring(0, srcPath.lastIndexOf('/')) + '/';
-            
-            // Find all img elements in the iframe document
-            const images = iframeDoc.querySelectorAll('img');
-            
-            // Adjust the src of each image to be relative to the HTML file's directory
-            images.forEach(img => {
-                const imgSrc = img.getAttribute('src');
-                if (!imgSrc.startsWith('http') && !imgSrc.startsWith(basePath)) {
-                    img.src = basePath + imgSrc;
+            // Function to fix image paths
+            function fixImagePaths() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    // Get the current iframe's src (path to the HTML file)
+                    const srcPath = iframe.src;
+                    const basePath = srcPath.substring(0, srcPath.lastIndexOf('/')) + '/';
+                    
+                    // Find all img elements in the iframe document
+                    const images = iframeDoc.querySelectorAll('img');
+                    
+                    // Adjust the src of each image to be relative to the HTML file's directory
+                    images.forEach(img => {
+                        const imgSrc = img.getAttribute('src');
+                        if (imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith(basePath)) {
+                            img.src = basePath + imgSrc;
+                        }
+                    });
+                } catch (e) {
+                    console.log('Error fixing image paths:', e);
                 }
-            });
-        }
+            }
 
-        // Attach the fixImagePaths function to iframe's load event
-        document.getElementById('file-viewer').addEventListener('load', fixImagePaths);
+            // Attach the fixImagePaths function to iframe's load event
+            iframe.addEventListener('load', fixImagePaths);
+        });
     </script>
 </body>
 </html>
