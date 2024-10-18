@@ -18,6 +18,8 @@ def generate_index(root_dir):
         #file-viewer { width: 70%; border: none; }
         ul { list-style-type: none; padding: 0; }
         li { margin: 8px 0; }
+        .file-link { margin-right: 10px; }
+        .popout-button { background: none; border: none; cursor: pointer; font-size: 12px; color: #0066cc; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -46,12 +48,15 @@ def generate_index(root_dir):
                 index_file.write(f"{indent}<li><strong>{folder_name}/</strong></li>\n")
                 index_file.write(f"{indent}<ul>\n")
 
-            # Write file links with indentation and link them to the iframe
+            # Write file links with indentation and link them to the iframe, adding a pop-out button
             for filename in files:
                 if filename.endswith(".html"):
                     file_path = os.path.relpath(os.path.join(root, filename), root_dir)
                     index_file.write(
-                        f'{indent}    <li><a href="{file_path}" target="file-viewer">{filename}</a></li>\n'
+                        f"{indent}    <li>"
+                        f'<a href="{file_path}" target="file-viewer" class="file-link">{filename}</a>'
+                        f'<button class="popout-button" onclick="window.open(\'{file_path}\')">Pop-out</button>'
+                        f"</li>\n"
                     )
 
             # Close folder's list (if not root)
@@ -69,9 +74,7 @@ def generate_index(root_dir):
 """
         )
 
-    print(
-        "Formatted index file with breaks before parent folders generated successfully."
-    )
+    print("Formatted index file with pop-out buttons added generated successfully.")
 
 
 # Call the function to generate the index
