@@ -63,7 +63,7 @@ def generate_index(root_dir):
             """
         </ul>
     </div>
-    <iframe id="file-viewer" name="file-viewer" src="" title="File Viewer" onload="fixImagePaths()"></iframe>
+    <iframe id="file-viewer" name="file-viewer" src="" title="File Viewer"></iframe>
 
     <script>
         // Function to dynamically adjust image paths
@@ -86,6 +86,9 @@ def generate_index(root_dir):
                 }
             });
         }
+
+        // Attach the fixImagePaths function to iframe's load event
+        document.getElementById('file-viewer').addEventListener('load', fixImagePaths);
     </script>
 </body>
 </html>
